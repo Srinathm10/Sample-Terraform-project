@@ -47,9 +47,10 @@ resource "azurerm_windows_virtual_machine" "main" {
   name                = "${var.prefix}-vm"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
-  size                = "Standard_F2"
+  size                = "Standard_DC1ds_v3"
   admin_username      = "adminuser"
-  admin_password      = "P@ssw0rd1234!"
+  admin_password      = "Password1234!"
+
   network_interface_ids = [
     azurerm_network_interface.main.id,
   ]
@@ -57,7 +58,7 @@ resource "azurerm_windows_virtual_machine" "main" {
   source_image_reference {
     publisher = "MicrosoftWindowsServer"
     offer     = "WindowsServer"
-    sku       = "2016-Datacenter"
+    sku       = "2022-datacenter-azure-edition-core"
     version   = "latest"
   }
 
@@ -65,4 +66,10 @@ resource "azurerm_windows_virtual_machine" "main" {
     storage_account_type = "Standard_LRS"
     caching              = "ReadWrite"
   }
+
+  # "hotpatching_enabled" is currently only supported on "2022-datacenter-azure-edition-core" or "2022-datacenter-azure-edition-core-smalldisk" image reference skus
+  patch_mode               = "AutomaticByPlatform"
+  hotpatching_enabled      = true
+  provision_vm_agent       = true
+  enable_automatic_updates = true
 }
