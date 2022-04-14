@@ -47,18 +47,16 @@ resource "azurerm_windows_virtual_machine" "main" {
   name                = "${var.prefix}-vm"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
-  size                = "Standard_DC1ds_v3"
+  size                = var.vm_size
   admin_username      = "adminuser"
   admin_password      = "Password1234!"
 
-  network_interface_ids = [
-    azurerm_network_interface.main.id,
-  ]
+  network_interface_ids = [azurerm_network_interface.main.id]
 
   source_image_reference {
     publisher = "MicrosoftWindowsServer"
     offer     = "WindowsServer"
-    sku       = "2022-datacenter-azure-edition-core"
+    sku       = var.sku
     version   = "latest"
   }
 
